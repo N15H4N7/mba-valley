@@ -20,8 +20,10 @@ def competitionDetailView(request, pk):
 
 def CompetitionListView(request):
 	Competition = competition.objects.all()
+	published = competition.objects.filter(is_published=True)
 	context = {
-		'Competition' : Competition
+		'Competition' : Competition,
+		'published': published 
 	}
 	return render(request, 'competition/competition.html', context)
 
@@ -49,9 +51,8 @@ def competitionCreateView(request):
 		form = competitionCreateForm(request.POST, request.FILES)
 		if form.is_valid():
 			form.instance.name = form.cleaned_data.get('event_name')
+			form.instance.about = form.cleaned_data.get('about_the_event')
 			x = form.save()
-			messages.success(
-				request, 'Your submission has been sent to our team for review. You will be notified via e-mail if it is published.')
 
 			return redirect('award_register', pk = x.id)
 	else:
@@ -72,7 +73,7 @@ def competitionRegister(request, pk):
 		compe.registered = compe.registered + 1
 		compe.save()
 		form.save()
-		return redirect('https://docs.google.com/forms/d/1x7Wp0bHMWFMCEaq3dopv-bPU9bOFeuJJXXhfkqOw6w0/edit')
+		return redirect (compe.team_link)
 	else:
 		form = Register()		
 	context = {
@@ -96,6 +97,9 @@ def awardregister(request, pk):
 				form = AwardForm()
 				return render(request, 'competition/awards.html', { 'form' : form, 'prize' : prize, 'comp' : comp})
 			if var == 'submit':
+				messages.success(
+				request, 'Your submission has been sent to our team for review. In case of any query, you can contact us.')
+
 				return redirect('competition')
 	form = AwardForm()
 	context = {

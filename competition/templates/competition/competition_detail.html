@@ -111,10 +111,17 @@
                     <div style="text-align: center; padding-top: 50px;">
                         <p style="font-size: 18px;"><i class="fas fa-users"></i><b>Team Size: {{ Competition.min_size}}-{{ Competition.max_size}} member/s</b></p>
                     </div>
-                    <a id="button" class="btn btn-primary more register-btn" style="overflow: visible;" href="{% url 'competition-register' Competition.id %}">
-                        <div>Register Now</div>
-                        <div><i class="ion-ios-arrow-thin-right"></i></div>
-                    </a>
+                    {% if user.is_authenticated %}
+                        <a id="button" class="btn btn-primary more register-btn" style="overflow: visible;" href="{% url 'competition-register' Competition.id %}">
+                            <div>Register Now</div>
+                            <div><i class="ion-ios-arrow-thin-right"></i></div>
+                        </a>
+                    {% else %}
+                        <a id="button" class="btn btn-primary more register-btn" style="overflow: visible;" href="{% url 'login' %}">
+                            <div>Register Now</div>
+                            <div><i class="ion-ios-arrow-thin-right"></i></div>
+                        </a>
+                    {% endif %}
                     <div id="abcd" class="btn btn-primary more register-btn"></div>
                     
                 </div>
@@ -136,9 +143,11 @@
                     </div>
                         <script type="text/javascript">
                             function countdown() {
+                                var dateFormat = require('dateformat');
                                 var now = new Date();
-                                var startDate = new Date({{ Competition.begin_year }}, {{ Competition.begin_month }} - 1, {{ Competition.begin_day }});
-                                var endDate = new Date({{ Competition.last_year }}, {{ Competition.last_month }} - 1, {{ Competition.last_day }});
+                                dateFormat(now, "yyyy, mm, dd h:MM:ss");
+                                var startDate = new Date({{ Competition.begin_year }}, {{ Competition.begin_month }} - 1, {{ Competition.begin_day }}, {{ Competition.begin_hour }}, {{ Competition.begin_minute }}, {{ Competition.begin_second }});
+                                var endDate = new Date({{ Competition.last_year }}, {{ Competition.last_month }} - 1, {{ Competition.last_day }}, {{ Competition.last_hour }}, {{ Competition.last_minute }}, {{ Competition.last_second }});
              
                                 var currentTime = now.getTime();
                                 var endTime = endDate.getTime();
@@ -229,9 +238,8 @@
                 </div>
                 <div style="display: flex; align-items: center; flex-direction:column; padding-top:10px; padding-bottom: 18px;">
                     <div style=" padding-top: 8px;">
-                        <h5><i class="fas fa-users-cog"></i><b>{{ Competition.organiser.name }}</b></h5>
-                        <a>{{ Competition.organiser.email }}</a><br><br>
-                        <a>{{ Competition.organiser.contact_no }}</a>
+                        <h5><i class="fas fa-users-cog"></i><b>{{ Competition.organiser_name }}</b></h5>
+                        <a>{{ Competition.organiser_email }}</a><br><br>
                     </div>
                 </div>
             </div>
@@ -251,8 +259,8 @@
             <script type="text/javascript">
                 function countdown() {
                     var now = new Date();
-                    var openDate = new Date({{ Competition.open_year }}, {{ Competition.open_month }} - 1, {{ Competition.open_day }});
-                    var closeDate = new Date({{ Competition.close_year }}, {{ Competition.close_month }} - 1, {{ Competition.close_day }});
+                    var openDate = new Date({{ Competition.open_year }}, {{ Competition.open_month }} - 1, {{ Competition.open_day }}, {{ Competition.open_hour }}, {{ Competition.open_minute }}, {{ Competition.open_second }});
+                    var closeDate = new Date({{ Competition.close_year }}, {{ Competition.close_month }} - 1, {{ Competition.close_day }}, {{ Competition.close_hour }}, {{ Competition.close_minute }}, {{ Competition.close_second }});
  
                     var currentTime = now.getTime();
                     var closeTime = closeDate.getTime();
